@@ -30,5 +30,5 @@ python main.py - произойдет скачивание рандомного 
 
 
 ## Скачивание комикса и публикация его на стену в группу вконтакте
-![](https://github.com/LevikovCollector/devman_api_inst/blob/levikov/img_for_gitHub/01-12-2020_215543.jpg)
-![](https://github.com/LevikovCollector/devman_api_inst/blob/levikov/img_for_gitHub/01-12-2020_215510.jpg)
+![](https://github.com/LevikovCollector/public_comics_to_VK/blob/levikov/img_for_gitHub/01-12-2020_215510.jpg)
+![](https://github.com/LevikovCollector/public_comics_to_VK/blob/levikov/img_for_gitHub/01-12-2020_215510.jpg)
