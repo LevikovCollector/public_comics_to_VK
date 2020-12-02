@@ -3,6 +3,7 @@ import requests
 import pathlib
 import datetime
 import random
+import shutil
 
 LAST_COMICS_API = 'http://xkcd.com/info.0.json'
 
@@ -12,9 +13,14 @@ def create_folder(folder_name):
 def create_file_path(dir, file_name):
     return pathlib.Path.joinpath(pathlib.Path.cwd(), dir, file_name)
 
-def save_img(img_name, img_content, extension):
+def save_img(img_name, img_content, extension, folder_name = None, full_path = None):
     today = datetime.datetime.today().strftime("%d-%m-%Y_%H-%M")
-    with open(create_file_path('images', f'{img_name}_{today}.{extension}'), 'wb') as file:
+    if folder_name:
+        path = create_file_path(folder_name, f'{img_name}_{today}.{extension}')
+    else:
+        path = pathlib.PurePath(full_path,f'{img_name}_{today}.{extension}')
+
+    with open(path, 'wb') as file:
         file.write(img_content)
 
 def get_num_comics():
@@ -30,15 +36,22 @@ def get_comics():
     response = requests.get(f'http://xkcd.com/{comics_num}/info.0.json')
     response.raise_for_status()
 
-    img_response = requests.get(response.json()['img'])
+    img_link = response.json()['img']
+    img_extension = img_link.split('/')[-1].split('.')[-1]
+
+    img_response = requests.get(img_link)
     response.raise_for_status()
 
     return {
             'comics_content': img_response.content,
-            'comics_comment': response.json()['alt']
+            'comics_comment': response.json()['alt'],
+            'img_extension': img_extension
             }
 
-def delete_comics():
-    image = os.listdir(pathlib.Path.joinpath(pathlib.Path.cwd(), 'images'))[0]
-    path_to_image = pathlib.Path.joinpath(pathlib.Path.cwd(), 'images', image)
-    os.remove(path_to_image)
+def delete_comics(folder_with_img=None, full_path_to_folder=None):
+    if folder_with_img:
+        shutil.rmtree(pathlib.Path.joinpath(pathlib.Path.cwd(), folder_with_img))
+    else:
+        shutil.rmtree(full_path_to_folder)
+
+
