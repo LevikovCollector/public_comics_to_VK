@@ -1,9 +1,9 @@
 import requests
 import os
 import pathlib
-
+from dotenv import load_dotenv
 API_VK = 'https://api.vk.com/method/'
-API_VK_VER = '5.126'
+API_VK_VER = '5.1269999'
 
 
 def get_url_for_upload_img(path_to_folder):
@@ -20,10 +20,10 @@ def get_url_for_upload_img(path_to_folder):
             'photo': file,
         }
         response = requests.get(f'{API_VK}photos.getWallUploadServer', params=vk_params)
-        response.raise_for_status()
+        verify_vk_respons(response.json())
 
         response = requests.post(response.json()['response']['upload_url'], files=files)
-        response.raise_for_status()
+        verify_vk_respons(response.json())
 
         return response.json()
 
@@ -37,7 +37,7 @@ def post_img_to_vk_server(server_data):
                  }
 
     response = requests.post(f'{API_VK}photos.saveWallPhoto', params=vk_params)
-    response.raise_for_status()
+    verify_vk_respons(response.json())
     vk_response = response.json()['response'][0]
     return  {
              'media_id': vk_response['id'],
@@ -54,8 +54,16 @@ def post_img_to_group_wall(attachments_info, message):
                 }
 
     response = requests.post(f'{API_VK}wall.post', params=vk_params)
-    response.raise_for_status()
+    verify_vk_respons(response.json())
     try:
         print(f'Комикс опубликован! ID записи: {response.json()["response"]["post_id"]}')
     except KeyError as e:
         print(f'При публикации возникли ошибки: {e.args}')
+
+def verify_vk_respons(vk_response):
+    try:
+        error_key = vk_response['error']
+        raise Exception(f'error_code: {error_key["error_code"]}, error_msg: {error_key["error_msg"]}')
+    except KeyError:
+        pass
+
