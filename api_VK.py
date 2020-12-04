@@ -3,7 +3,7 @@ import os
 import pathlib
 from dotenv import load_dotenv
 API_VK = 'https://api.vk.com/method/'
-API_VK_VER = '5.1269999'
+API_VK_VER = '5.126'
 
 
 def get_url_for_upload_img(path_to_folder):

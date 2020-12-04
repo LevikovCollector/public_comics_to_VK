@@ -37,7 +37,7 @@ def get_comics():
     response.raise_for_status()
 
     img_link = response.json()['img']
-    img_extension = os.path.splitext(img_link.split('/')[-1])[1]
+    img_extension = os.path.splitext(img_link)[1]
 
     img_response = requests.get(img_link)
     response.raise_for_status()
